@@ -1,0 +1,6 @@
+---
+# HTTP Settings
+http_host: "localhost"
+http_conf: "localhost"
+http_port: "80"
+

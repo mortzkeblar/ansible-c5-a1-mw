@@ -1,0 +1,17 @@
+---
+# Variable configuration
+- name: Include OS-specific variables.
+  ansible.builtin.include_vars: "vars/{{ ansible_os_family }}.yml"
+
+- name: Define apache_packages
+  ansible.builtin.set_fact:
+    apache_packages: "{{ __apache_packages }}"
+
+- name: Define lamp_packages
+  ansible.builtin.set_fact:
+    lamp_packages: "{{ __lamp_packages }}"
+
+- name: Define php_modules
+  ansible.builtin.set_fact:
+    php_modules: "{{ __php_modules }}"
+

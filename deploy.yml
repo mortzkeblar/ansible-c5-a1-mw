@@ -1,0 +1,32 @@
+---
+- name: Deploy WordPress
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    mysql_root_password: "superpassword"
+    mysql_db: "wpdb"
+    mysql_user: "wpdb"
+    mysql_password: "normalpassword"
+
+    http_port: 80
+    http_host: "wordpress.local"
+    http_conf: "wordpress.conf"
+
+  tasks:
+    - name: Información del sistema operativo
+      debug:
+        msg: "OS: {{ ansible_os_family }} // Distro: {{ ansible_distribution }}"
+
+  roles:
+    - role: geerlingguy.mysql
+      vars:
+        mysql_databases:
+          - name: "{{ mysql_db }}"
+        mysql_users:
+          - name: "{{ mysql_user }}"
+            password: "{{ mysql_password }}"
+            priv: "{{ mysql_db }}.*:ALL"
+
+    - role: wordpress.custom_role

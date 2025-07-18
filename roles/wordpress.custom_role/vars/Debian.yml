@@ -1,0 +1,19 @@
+---
+__apache_packages:
+  - apache2
+
+__lamp_packages:
+  - python3-pymysql
+  - php
+  - php-mysql
+  - libapache2-mod-php
+
+__php_modules:
+  - php-curl
+  - php-gd
+  - php-mbstring
+  - php-xml
+  - php-xmlrpc
+  - php-soap
+  - php-intl
+  - php-zip

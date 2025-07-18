@@ -1,0 +1,38 @@
+---
+driver:
+  name: vagrant
+
+role_name_check: 1
+
+platforms:
+  - name: web-ubuntu
+    box: "ubuntu/focal64"
+    memory: 1024
+    interfaces:
+      - network_name: forwarded_port
+        guest: 80
+        host: 8881
+
+  - name: web-debian
+    box: "debian/bookworm64"
+    memory: 1024
+    interfaces:
+      - network_name: forwarded_port
+        guest: 80
+        host: 8882
+
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      web-ubuntu:
+        http_port: 80
+        http_host: "web-ubuntu.localhost"
+        http_conf: "web-ubuntu.conf"
+      web-debian:
+        http_port: 80
+        http_host: "web-debian.localhost"
+        http_conf: "web-debian.conf"
+
+verifier:
+  name: ansible
