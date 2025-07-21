@@ -15,3 +15,11 @@
   ansible.builtin.set_fact:
     php_modules: "{{ __php_modules }}"
 
+- name: Define apache_user
+  ansible.builtin.set_fact:
+    apache_user: "{{ __apache_user }}"
+
+- name: Define apache_group
+  ansible.builtin.set_fact:
+    apache_group: "{{ __apache_group }}"
+

@@ -1,0 +1,20 @@
+---
+- name: Update DNF cache
+  ansible.builtin.dnf:
+    update_cache: yes
+
+- name: Install Apache packages with DNF
+  ansible.builtin.dnf:
+    name: "{{ apache_packages }}"
+    state: present
+
+- name: Install LAMP packages with DNF
+  ansible.builtin.dnf:
+    name: "{{ lamp_packages }}"
+    state: present
+
+- name: Install PHP modules with DNF
+  ansible.builtin.dnf:
+    name: "{{ php_modules }}"
+    state: present
+
