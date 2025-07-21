@@ -1,0 +1,59 @@
+---
+- name: Install dependencies
+  apt:
+    name: "{{ apache_dependencies }}"
+    state: present
+    update_cache: yes
+
+- name: Download Apache source code
+  ansible.builtin.get_url:
+    url: "{{ apache_url }}"
+    dest: "/tmp/{{ apache_package_name }}-{{ apache_version }}.tar.gz"
+
+- name: Descompress file
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ apache_package_name }}-{{ apache_version }}.tar.gz"
+    dest: "/tmp/"
+    remote_src: yes
+
+- name: Configuring Apache
+  ansible.builtin.command: |
+    ./configure \
+    --prefix={{ apache_dir }} \
+    --enable-systemd
+  args:
+    chdir: "/tmp/httpd-{{ apache_version }}"
+    creates: "{{ apache_dir }}/bin/httpd"
+
+- name: Install (with make)
+  ansible.builtin.make:
+    chdir: "/tmp/httpd-{{ apache_version }}"
+    target: "install"
+
+- name: Create apache group
+  ansible.builtin.group:
+    name: "{{ apache_group }}"
+    state: present
+  become: yes
+
+- name: Create apache user
+  ansible.builtin.user:
+    name: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    system: yes
+    shell: /usr/sbin/nologin
+  become: yes
+
+- name: Enabled systemd service (Systemd)
+  ansible.builtin.template:
+    src: "apache.service.j2"
+    dest: "/etc/systemd/system/httpd.service"
+  when: ansible_facts['service_mgr'] == 'systemd'
+  notify: Reload system
+
+- name: Starting apache service
+  ansible.builtin.service:
+    name: "httpd"
+    state: started
+    enabled: yes
+  become: yes

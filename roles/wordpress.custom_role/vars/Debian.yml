@@ -1,8 +1,9 @@
 ---
 apache_user: www-data
 apache_group: www-data
+apache_package: apache2
 apache_service: apache2
-apache_server_root: /etc/apache2
+apache_dir: /usr/local/apache2
 
 
 __apache_packages:

@@ -1,6 +1,7 @@
 ---
 apache_user: apache
 apache_group: apache
+apache_package_name: httpd
 apache_service: httpd
 apache_server_root: /etc/httpd
 
