@@ -4,7 +4,7 @@
 
 - name: Install dependencies packages
   include_tasks: "setup-{{ ansible_os_family }}.yml"
-  tags: [ system ]
+  tags: [system]
 
 # Apache configuration
 
@@ -15,29 +15,41 @@
     owner: "{{ apache_user }}"
     group: "{{ apache_group }}"
     mode: '0755'
-  tags: [ apache ]
+  tags: [apache]
 
-- name: Set up Apache VirtualHost
-  template:
+- name: Create conf.d/ directory
+  ansible.builtin.file:
+    path: "{{ apache_server_root }}/conf.d"
+    state: directory
+    mode: '0755'
+  tags: [apache]
+
+- name: Ensure conf.d/*.conf is included in apache main config
+  lineinfile:
+    path: "{{ apache_main_conf }}"
+    insertafter: EOF
+    line: "IncludeOptional conf.d/*.conf"
+    state: present
+  notify: Reload Apache
+  tags: [apache]
+
+
+- name: Set up Apache vhost config
+  ansible.builtin.template:
     src: "apache.conf.j2"
-    dest: "/etc/apache2/sites-available/{{ http_conf }}"
+    dest: "{{ apache_server_root }}/conf.d/{{ http_host }}.conf"
   notify: Reload Apache
-  tags: [ apache ]
+  tags: [apache]
 
-- name: Enable rewrite module
-  shell: /usr/sbin/a2enmod rewrite
-  notify: Reload Apache
-  tags: [ apache ]
-
-- name: Enable new site
-  shell: /usr/sbin/a2ensite {{ http_conf }}
-  notify: Reload Apache
-  tags: [ apache ]
-
-- name: Disable default Apache site
-  shell: /usr/sbin/a2dissite 000-default.conf
+- name: Remove default site
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ apache_server_root }}/sites-enabled/000-default.conf"
+    - "{{ apache_server_root }}/conf.d/welcome.conf"
   notify: Restart Apache
-  tags: [ apache ]
+  tags: [apache]
 
 # WordPress Configuration
 
@@ -47,7 +59,7 @@
     dest: "/var/www/{{ http_host }}"
     remote_src: yes
     creates: "/var/www/{{ http_host }}/wordpress"
-  tags: [ wordpress ]
+  tags: [wordpress]
 
 - name: Set ownership
   file:
@@ -56,38 +68,38 @@
     recurse: yes
     owner: "{{ apache_user }}"
     group: "{{ apache_group }}"
-  tags: [ wordpress ]
+  tags: [wordpress]
 
 - name: Search files in WordPress root path
   ansible.builtin.find:
     paths: "/var/www/{{ http_host }}/wordpress/"
     file_type: file
   register: files
-  tags: [ wordpress ]
+  tags: [wordpress]
 
 - name: Changes permissions to files in WordPress root path
   ansible.builtin.file:
     path: "{{ item.path }}"
     mode: "0640"
   loop: "{{ files.files }}"
-  tags: [ wordpress ]
+  tags: [wordpress]
 
-- name:  Search directories in WordPress root path
+- name: Search directories in WordPress root path
   ansible.builtin.find:
     paths: "/var/www/{{ http_host }}/wordpress/"
     file_type: directory
   register: directories
-  tags: [ wordpress ]
+  tags: [wordpress]
 
 - name: Changes permission to directories in WordPress root path
   ansible.builtin.file:
     path: "{{ item.path }}"
     mode: "0750"
   loop: "{{ directories.files }}"
-  tags: [ wordpress ]
+  tags: [wordpress]
 
 - name: Set up wp-config
   template:
     src: "wp-config.php.j2"
     dest: "/var/www/{{ http_host }}/wordpress/wp-config.php"
-  tags: [ wordpress ]
+  tags: [wordpress]
