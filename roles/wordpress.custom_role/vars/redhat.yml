@@ -6,17 +6,17 @@ apache_conf_dir: /etc/httpd
 apache_main_conf_file: /etc/httpd/conf/httpd.conf
 apache_log_dir: /var/log/httpd
 
-__apache_packages:
+apache_packages:
   - httpd
 
 
-__lamp_packages:
+lamp_packages:
   - python3-PyMySQL
   - php
   - php-mysqlnd
   - php-common
 
-__php_modules:
+php_modules:
   - php-cli
   - php-gd
   - php-mbstring

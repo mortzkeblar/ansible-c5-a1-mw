@@ -1,12 +1,12 @@
-<VirtualHost *:{{ http_port }}>
+<VirtualHost *:{{ vhost_port }}>
   ServerAdmin webmaster@localhost
-  ServerName {{ http_host }}
-  ServerAlias www.{{ http_host }}
-  DocumentRoot /var/www/{{ http_host }}/wordpress/
+  ServerName {{ vhost_name }}
+  ServerAlias www.{{ vhost_name }}
+  DocumentRoot {{ vhost_webroot }}/wordpress/
   ErrorLog {{ apache_log_dir }}/error.log
   CustomLog {{ apache_log_dir }}/access.log combined
 
-  <Directory /var/www/{{ http_host }}/wordpress>
+  <Directory {{ vhost_webroot }}/wordpress>
     Options -Indexes
   </Directory>
 
