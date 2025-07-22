@@ -26,7 +26,7 @@
 - name: Set up Apache vhost config
   ansible.builtin.template:
     src: "apache.conf.j2"
-    dest: "{{ apache_conf_dir }}/conf.d/{{ vhost_name }}.conf"
+    dest: "{{ apache_conf_dir }}/conf.d/{{ vhost_conf_name }}.conf"
   notify: Reload Apache
 
 - name: Remove default site

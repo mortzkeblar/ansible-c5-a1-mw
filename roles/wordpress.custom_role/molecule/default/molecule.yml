@@ -28,23 +28,30 @@ platforms:
       - network_name: forwarded_port
         guest: 80
         host: 8883
+  - name: web-centosstream
+    box: "centos/stream9"
+    memory: 1024
+    interfaces:
+      - network_name: forwarded_port
+        guest: 80
+        host: 8884
 
 provisioner:
   name: ansible
   inventory:
     host_vars:
       web-ubuntu:
-        http_port: 80
-        http_host: "web-ubuntu.localhost"
-        http_conf: "web-ubuntu.conf"
+        vhost_port: 80
+        vhost_name: "web-ubuntu.localhost"
       web-debian:
-        http_port: 80
-        http_host: "web-debian.localhost"
-        http_conf: "web-debian.conf"
+        vhost_port: 80
+        vhost_name: "web-debian.localhost"
       web-rocky:
-        http_port: 80
-        http_host: "web-rocky.localhost"
-        http_conf: "web-rocky.conf"
+        vhost_port: 80
+        vhost_name: "web-rocky.localhost"
+      web-centos:
+        vhost_port: 80
+        vhost_name: "web-centos.localhost"
 
 verifier:
   name: ansible
