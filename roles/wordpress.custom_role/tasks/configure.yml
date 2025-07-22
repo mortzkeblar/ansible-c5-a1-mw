@@ -10,7 +10,7 @@
 
 - name: Create document root
   ansible.builtin.file:
-    path: "/var/www/{{ http_host }}"
+    path: "{{ vhost_webroot }}"
     state: directory
     owner: "{{ apache_user }}"
     group: "{{ apache_group }}"
@@ -19,16 +19,16 @@
 
 - name: Create conf.d/ directory
   ansible.builtin.file:
-    path: "{{ apache_server_root }}/conf.d"
+    path: "{{ apache_conf_dir }}/conf.d"
     state: directory
     mode: '0755'
   tags: [apache]
 
 - name: Ensure conf.d/*.conf is included in apache main config
   ansible.builtin.lineinfile:
-    path: "{{ apache_main_conf }}"
+    path: "{{ apache_main_conf_file }}"
     insertafter: EOF
-    line: "IncludeOptional conf.d/*.conf"
+    line: "IncludeOptional {{ apache_conf_dir}}/conf.d/*.conf"
     state: present
   notify: Reload Apache
   tags: [apache]
@@ -37,7 +37,7 @@
 - name: Set up Apache vhost config
   ansible.builtin.template:
     src: "apache.conf.j2"
-    dest: "{{ apache_server_root }}/conf.d/{{ http_host }}.conf"
+    dest: "{{ apache_conf_dir }}/conf.d/{{ vhost_name }}.conf"
   notify: Reload Apache
   tags: [apache]
 
@@ -46,24 +46,24 @@
     path: "{{ item }}"
     state: absent
   loop:
-    - "{{ apache_server_root }}/sites-enabled/000-default.conf"
-    - "{{ apache_server_root }}/conf.d/welcome.conf"
+    - "{{ apache_conf_dir }}/sites-enabled/000-default.conf"
+    - "{{ apache_conf_dir }}/conf.d/welcome.conf"
   notify: Restart Apache
   tags: [apache]
 
 # WordPress Configuration
 
-- name: Download and unpack WordPress 6.8
+- name: Download WordPress {{ wordpress_version }}
   ansible.builtin.unarchive:
-    src: https://wordpress.org/wordpress-6.8.tar.gz
-    dest: "/var/www/{{ http_host }}"
+    src: "{{ wordpress_download_url }}"
+    dest: "{{ vhost_webroot }}"
     remote_src: yes
-    creates: "/var/www/{{ http_host }}/wordpress"
+    creates: "{{ vhost_webroot }}/wordpress/"
   tags: [wordpress]
 
 - name: Set ownership
   ansible.builtin.file:
-    path: "/var/www/{{ http_host }}"
+    path: "{{ vhost_webroot }}"
     state: directory
     recurse: yes
     owner: "{{ apache_user }}"
@@ -72,7 +72,7 @@
 
 - name: Search files in WordPress root path
   ansible.builtin.find:
-    paths: "/var/www/{{ http_host }}/wordpress/"
+    paths: "{{ vhost_webroot }}/wordpress/"
     file_type: file
   register: files
   tags: [wordpress]
@@ -86,7 +86,7 @@
 
 - name: Search directories in WordPress root path
   ansible.builtin.find:
-    paths: "/var/www/{{ http_host }}/wordpress/"
+    paths: "{{ vhost_webroot }}/wordpress/"
     file_type: directory
   register: directories
   tags: [wordpress]
@@ -101,5 +101,5 @@
 - name: Set up wp-config
   ansible.builtin.template:
     src: "wp-config.php.j2"
-    dest: "/var/www/{{ http_host }}/wordpress/wp-config.php"
+    dest: "{{ vhost_webroot }}/wordpress/wp-config.php"
   tags: [wordpress]

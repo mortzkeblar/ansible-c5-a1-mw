@@ -2,8 +2,8 @@
 apache_user: apache
 apache_group: apache
 apache_service: httpd
-apache_server_root: /etc/httpd
-apache_main_conf: /etc/httpd/conf/httpd.conf
+apache_conf_dir: /etc/httpd
+apache_main_conf_file: /etc/httpd/conf/httpd.conf
 apache_log_dir: /var/log/httpd
 
 __apache_packages:
