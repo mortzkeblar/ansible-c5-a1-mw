@@ -1,6 +1,11 @@
 ---
-# HTTP Settings
-http_host: "localhost"
-http_conf: "localhost"
-http_port: "80"
+# Apache Settings
+vhost_name: "localhost"
+vhost_conf_name: "{{ vhost_name }}"
+vhost_port: "80"
+vhost_webroot: "/var/www/{{ vhost_name }}"
+
+# Wordpress settings
+wordpress_version: "6.8"
+wordpress_download_url: "https://wordpress.org/wordpress-{{ wordpress_version }}.tar.gz"
 
