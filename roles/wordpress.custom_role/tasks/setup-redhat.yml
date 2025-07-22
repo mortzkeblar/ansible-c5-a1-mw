@@ -17,10 +17,3 @@
   ansible.builtin.dnf:
     name: "{{ php_modules }}"
     state: present
-
-- name: permit traffic for http port - firewalld
-  ansible.posix.firewalld:
-    service: http
-    permanent: true
-    immediate: true
-    state: enabled

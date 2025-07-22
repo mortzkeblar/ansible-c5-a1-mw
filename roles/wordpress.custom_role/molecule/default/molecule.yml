@@ -28,13 +28,6 @@ platforms:
       - network_name: forwarded_port
         guest: 80
         host: 8883
-  - name: web-centosstream
-    box: "centos/stream9"
-    memory: 1024
-    interfaces:
-      - network_name: forwarded_port
-        guest: 80
-        host: 8884
 
 provisioner:
   name: ansible
@@ -49,9 +42,6 @@ provisioner:
       web-rocky:
         vhost_port: 80
         vhost_name: "web-rocky.localhost"
-      web-centos:
-        vhost_port: 80
-        vhost_name: "web-centos.localhost"
 
 verifier:
   name: ansible

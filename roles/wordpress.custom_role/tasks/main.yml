@@ -6,4 +6,3 @@
 
 - ansible.builtin.import_tasks: apache.yml
 - ansible.builtin.import_tasks: wordpress.yml
-
