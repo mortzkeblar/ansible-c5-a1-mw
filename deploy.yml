@@ -10,14 +10,8 @@
     mysql_user: "wpdb"
     mysql_password: "normalpassword"
 
-    http_port: 80
-    http_host: "wordpress.local"
-    http_conf: "wordpress.conf"
-
-  tasks:
-    - name: Información del sistema operativo
-      debug:
-        msg: "OS: {{ ansible_os_family }} // Distro: {{ ansible_distribution }}"
+    vhost_port: 80
+    vhost_name: "wordpress.local"
 
   roles:
     - role: geerlingguy.mysql
