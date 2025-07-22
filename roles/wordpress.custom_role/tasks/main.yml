@@ -1,15 +1,12 @@
 ---
-# Variable configuration.
-- ansible.builtin.include_tasks: variables.yml
-
 
 # Setup/install tasks.
 
-- ansible.builtin.import_tasks: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
+- ansible.builtin.import_tasks: "setup-{{ ansible_os_family | lower }}.yml"
 
-- ansible.builtin.import_tasks: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+# Apache configuration
+- ansible.builtin.import_tasks: apache.yml
 
-# Configure WordPress
-- ansible.builtin.include_tasks: configure.yml
+# WordPress configuration
+- ansible.builtin.import_tasks: wordpress.yml
+
