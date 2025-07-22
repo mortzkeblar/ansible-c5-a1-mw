@@ -4,3 +4,6 @@ http_host: "localhost"
 http_conf: "localhost"
 http_port: "80"
 
+# Wordpress settings
+wordpress_download_url: ""
+wordpress_version: "6.0.5"

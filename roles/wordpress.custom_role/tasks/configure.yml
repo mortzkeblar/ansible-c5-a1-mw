@@ -9,7 +9,7 @@
 # Apache configuration
 
 - name: Create document root
-  file:
+  ansible.builtin.file:
     path: "/var/www/{{ http_host }}"
     state: directory
     owner: "{{ apache_user }}"
@@ -25,7 +25,7 @@
   tags: [apache]
 
 - name: Ensure conf.d/*.conf is included in apache main config
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ apache_main_conf }}"
     insertafter: EOF
     line: "IncludeOptional conf.d/*.conf"
@@ -54,7 +54,7 @@
 # WordPress Configuration
 
 - name: Download and unpack WordPress 6.8
-  unarchive:
+  ansible.builtin.unarchive:
     src: https://wordpress.org/wordpress-6.8.tar.gz
     dest: "/var/www/{{ http_host }}"
     remote_src: yes
@@ -62,7 +62,7 @@
   tags: [wordpress]
 
 - name: Set ownership
-  file:
+  ansible.builtin.file:
     path: "/var/www/{{ http_host }}"
     state: directory
     recurse: yes
@@ -99,7 +99,7 @@
   tags: [wordpress]
 
 - name: Set up wp-config
-  template:
+  ansible.builtin.template:
     src: "wp-config.php.j2"
     dest: "/var/www/{{ http_host }}/wordpress/wp-config.php"
   tags: [wordpress]
