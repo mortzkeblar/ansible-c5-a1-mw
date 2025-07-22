@@ -21,6 +21,14 @@ platforms:
         guest: 80
         host: 8882
 
+  - name: web-rocky
+    box: "generic/rocky9"
+    memory: 1024
+    interfaces:
+      - network_name: forwarded_port
+        guest: 80
+        host: 8883
+
 provisioner:
   name: ansible
   inventory:
@@ -33,6 +41,10 @@ provisioner:
         http_port: 80
         http_host: "web-debian.localhost"
         http_conf: "web-debian.conf"
+      web-rocky:
+        http_port: 80
+        http_host: "web-rocky.localhost"
+        http_conf: "web-rocky.conf"
 
 verifier:
   name: ansible

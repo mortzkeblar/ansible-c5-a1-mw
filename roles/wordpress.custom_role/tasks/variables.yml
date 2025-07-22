@@ -14,4 +14,3 @@
 - name: Define php_modules
   ansible.builtin.set_fact:
     php_modules: "{{ __php_modules }}"
-

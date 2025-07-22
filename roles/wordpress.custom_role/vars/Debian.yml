@@ -1,4 +1,11 @@
 ---
+apache_user: www-data
+apache_group: www-data
+apache_service: apache2
+apache_server_root: /etc/apache2
+apache_main_conf: /etc/apache2/apache2.conf
+apache_log_dir: /var/log/apache2
+
 __apache_packages:
   - apache2
 
