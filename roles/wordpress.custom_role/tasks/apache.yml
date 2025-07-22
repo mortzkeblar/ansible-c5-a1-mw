@@ -1,0 +1,39 @@
+---
+- name: Create document root
+  ansible.builtin.file:
+    path: "{{ vhost_webroot }}"
+    state: directory
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0755'
+
+- name: Create conf.d/ directory
+  ansible.builtin.file:
+    path: "{{ apache_conf_dir }}/conf.d"
+    state: directory
+    mode: '0755'
+  tags: [apache]
+
+- name: Ensure conf.d/*.conf is included in apache main config
+  ansible.builtin.lineinfile:
+    path: "{{ apache_main_conf_file }}"
+    insertafter: EOF
+    line: "IncludeOptional {{ apache_conf_dir}}/conf.d/*.conf"
+    state: present
+  notify: Reload Apache
+
+
+- name: Set up Apache vhost config
+  ansible.builtin.template:
+    src: "apache.conf.j2"
+    dest: "{{ apache_conf_dir }}/conf.d/{{ vhost_name }}.conf"
+  notify: Reload Apache
+
+- name: Remove default site
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ apache_conf_dir }}/sites-enabled/000-default.conf"
+    - "{{ apache_conf_dir }}/conf.d/welcome.conf"
+  notify: Restart Apache
