@@ -23,4 +23,4 @@
             password: "{{ mysql_password }}"
             priv: "{{ mysql_db }}.*:ALL"
 
-    - role: wordpress.custom_role
+    - role: mortzkeblar.wp_mw_role
