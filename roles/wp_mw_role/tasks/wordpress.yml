@@ -1,22 +1,22 @@
 ---
 - name: Download WordPress {{ wordpress_version }}
   ansible.builtin.unarchive:
-    src: "{{ wordpress_download_url }}"
-    dest: "{{ vhost_webroot }}"
-    remote_src: yes
-    creates: "{{ vhost_webroot }}/wordpress/"
+    src: "{{ wp_mw_role_wordpress_download_url }}"
+    dest: "{{ wp_mw_role_vhost_webroot }}"
+    remote_src: true
+    creates: "{{ wp_mw_role_vhost_webroot }}/wordpress/"
 
 - name: Set ownership
   ansible.builtin.file:
-    path: "{{ vhost_webroot }}"
+    path: "{{ wp_mw_role_vhost_webroot }}"
     state: directory
-    recurse: yes
-    owner: "{{ apache_user }}"
-    group: "{{ apache_group }}"
+    recurse: true
+    owner: "{{ wp_mw_role_apache_user }}"
+    group: "{{ wp_mw_role_apache_group }}"
 
 - name: Search files in WordPress root path
   ansible.builtin.find:
-    paths: "{{ vhost_webroot }}/wordpress/"
+    paths: "{{ wp_mw_role_vhost_webroot }}/wordpress/"
     file_type: file
   register: files
 
@@ -28,7 +28,7 @@
 
 - name: Search directories in WordPress root path
   ansible.builtin.find:
-    paths: "{{ vhost_webroot }}/wordpress/"
+    paths: "{{ wp_mw_role_vhost_webroot }}/wordpress/"
     file_type: directory
   register: directories
 
@@ -41,5 +41,5 @@
 - name: Set up wp-config
   ansible.builtin.template:
     src: "wp-config.php.j2"
-    dest: "{{ vhost_webroot }}/wordpress/wp-config.php"
-
+    dest: "{{ wp_mw_role_vhost_webroot }}/wordpress/wp-config.php"
+    mode: "0755"

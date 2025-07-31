@@ -1,0 +1,26 @@
+---
+wp_mw_role_apache_user: www-data
+wp_mw_role_apache_group: www-data
+wp_mw_role_apache_service: apache2
+wp_mw_role_apache_conf_dir: /etc/apache2
+wp_mw_role_apache_main_conf_file: /etc/apache2/apache2.conf
+wp_mw_role_apache_log_dir: /var/log/apache2
+
+wp_mw_role_apache_packages:
+  - apache2
+
+wp_mw_role_lamp_packages:
+  - python3-pymysql
+  - php
+  - php-mysql
+  - libapache2-mod-php
+
+wp_mw_role_php_modules:
+  - php-curl
+  - php-gd
+  - php-mbstring
+  - php-xml
+  - php-xmlrpc
+  - php-soap
+  - php-intl
+  - php-zip

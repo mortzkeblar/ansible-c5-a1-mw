@@ -1,19 +1,19 @@
 ---
 - name: Update DNF cache
   ansible.builtin.dnf:
-    update_cache: yes
+    update_cache: true
 
 - name: Install Apache packages with DNF
   ansible.builtin.dnf:
-    name: "{{ apache_packages }}"
+    name: "{{ wp_mw_role_apache_packages }}"
     state: present
 
 - name: Install LAMP packages with DNF
   ansible.builtin.dnf:
-    name: "{{ lamp_packages }}"
+    name: "{{ wp_mw_role_lamp_packages }}"
     state: present
 
 - name: Install PHP modules with DNF
   ansible.builtin.dnf:
-    name: "{{ php_modules }}"
+    name: "{{ wp_mw_role_php_modules }}"
     state: present
